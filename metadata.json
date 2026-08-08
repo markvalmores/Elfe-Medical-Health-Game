@@ -1,0 +1,6 @@
+{
+  "name": "Elfe Medical Health Game",
+  "description": "Health & wellness tracker with Nurse Elfe gacha, vitals log, scripture reflections, dream journal, and leaderboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
