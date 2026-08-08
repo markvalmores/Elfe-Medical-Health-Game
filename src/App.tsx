@@ -9,13 +9,20 @@ import { AnimeApiManager } from './components/AnimeApiManager';
 import { DreamAndScriptureSection } from './components/DreamAndScriptureSection';
 import { LeaderboardSection } from './components/LeaderboardSection';
 import { SeasonalCalendarSection } from './components/SeasonalCalendarSection';
+import { HolisticHealthSection } from './components/HolisticHealthSection';
+import { SettingsModal } from './components/SettingsModal';
 
-import { VitalsEntry, DreamEntry, GachaItem, PlayerInventoryItem, Banner } from './types';
+import { VitalsEntry, DreamEntry, GachaItem, PlayerInventoryItem, Banner, UserProfile } from './types';
 import { GACHA_CATALOG, INITIAL_LEADERBOARD } from './mockData';
+import { getUserProfile, saveUserProfile, createNewAutoProfile } from './utils/storage';
 
 export default function App() {
   const [showTitleScreen, setShowTitleScreen] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>('vitals');
+
+  // User Profile & Settings
+  const [userProfile, setUserProfile] = useState<UserProfile>(() => getUserProfile());
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   // Player Stats & Currency
   const [gems, setGems] = useState<number>(3200);
@@ -24,6 +31,16 @@ export default function App() {
   const [streakDays, setStreakDays] = useState<number>(5);
   const [dailyClaimed, setDailyClaimed] = useState<boolean>(false);
   const [userLocation, setUserLocation] = useState<string>('United States');
+
+  // Start game handler: auto-generates 7-digit profile if needed
+  const handleStartGame = () => {
+    let current = userProfile;
+    if (!current || !current.userId) {
+      current = createNewAutoProfile();
+      setUserProfile(current);
+    }
+    setShowTitleScreen(false);
+  };
 
   // Vitals & Dreams History
   const [vitalsHistory, setVitalsHistory] = useState<VitalsEntry[]>([
@@ -93,6 +110,17 @@ export default function App() {
     (acc, curr) => acc + curr.item.rarityScore * curr.quantity,
     0
   );
+
+  // Reward gained from fitness & faith tasks
+  const handleGainRewards = (addedGems: number, addedXp: number) => {
+    setGems((prev) => prev + addedGems);
+    const updatedProfile = {
+      ...userProfile,
+      xp: userProfile.xp + addedXp,
+    };
+    setUserProfile(updatedProfile);
+    saveUserProfile(updatedProfile);
+  };
 
   // Daily Bonus Claim
   const handleClaimDaily = () => {
@@ -197,7 +225,7 @@ export default function App() {
   };
 
   if (showTitleScreen) {
-    return <TitleScreen onStartGame={() => setShowTitleScreen(false)} />;
+    return <TitleScreen onStartGame={handleStartGame} />;
   }
 
   return (
@@ -213,12 +241,18 @@ export default function App() {
         dailyClaimed={dailyClaimed}
         userPowerScore={userPowerScore}
         userLocation={userLocation}
+        userProfile={userProfile}
+        onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenTitleScreen={() => setShowTitleScreen(true)}
       />
 
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
         {activeTab === 'vitals' && (
           <VitalsSection vitalsHistory={vitalsHistory} onAddVitals={handleAddVitals} />
+        )}
+
+        {activeTab === 'holisticHealth' && (
+          <HolisticHealthSection onGainRewards={handleGainRewards} />
         )}
 
         {activeTab === 'companion' && (
@@ -297,15 +331,24 @@ export default function App() {
         )}
       </main>
 
+      {/* Account & Profile Settings Modal */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        userProfile={userProfile}
+        onUpdateProfile={(updated) => setUserProfile(updated)}
+      />
+
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">
         <p className="font-semibold text-slate-400">
-          Elfe Medical Health Companion • Personal Health & Faith Reflection Tracking
+          Elfe Medical Health Companion • Personal Health, Gym & Faith Reflection Tracking
         </p>
         <p className="mt-1 text-[11px] text-slate-600">
-          For wellness tracking and spiritual encouragement. Always consult a certified medical professional for official clinical advice.
+          In faith according to Yahusha, Jesus Christ, YHWH & Holy Spirit. Always consult a certified medical professional for official clinical advice.
         </p>
       </footer>
     </div>
   );
 }
+

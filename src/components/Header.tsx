@@ -1,5 +1,6 @@
 import React from 'react';
-import { Heart, Sparkles, Shield, Gift, Calendar, Award, User, Flame, Globe } from 'lucide-react';
+import { Heart, Sparkles, Shield, Gift, Calendar, Award, User, Flame, Globe, Settings, Dumbbell, Hash } from 'lucide-react';
+import { UserProfile } from '../types';
 
 interface HeaderProps {
   gems: number;
@@ -12,6 +13,8 @@ interface HeaderProps {
   dailyClaimed: boolean;
   userPowerScore: number;
   userLocation: string;
+  userProfile: UserProfile;
+  onOpenSettings: () => void;
   onOpenTitleScreen?: () => void;
 }
 
@@ -26,10 +29,13 @@ export const Header: React.FC<HeaderProps> = ({
   dailyClaimed,
   userPowerScore,
   userLocation,
+  userProfile,
+  onOpenSettings,
   onOpenTitleScreen,
 }) => {
   const tabs = [
-    { id: 'vitals', label: 'Vitals & Fitness', icon: Heart },
+    { id: 'vitals', label: 'Vitals & Diagnostics', icon: Heart },
+    { id: 'holisticHealth', label: 'Gym, Diet & Cleansing', icon: Dumbbell },
     { id: 'companion', label: 'Nurse Elfe', icon: User },
     { id: 'gacha', label: 'Gacha Banners', icon: Sparkles },
     { id: 'inventory', label: 'Inventory & Crafting', icon: Shield },
@@ -49,10 +55,17 @@ export const Header: React.FC<HeaderProps> = ({
             Elfe Medical Health Companion
           </span>
           <span className="hidden sm:inline-block text-slate-500">|</span>
-          <span className="text-slate-400 flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block"></span>
-            Region: <strong className="text-slate-200">{userLocation}</strong>
-          </span>
+          <button
+            onClick={onOpenSettings}
+            className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 font-mono px-2.5 py-0.5 rounded-full border border-amber-500/30 transition"
+          >
+            <Hash className="w-3 h-3 text-amber-400" />
+            <span>#{userProfile.userId}</span>
+            <span className="text-slate-300 font-sans text-[11px] font-bold max-w-[100px] truncate">
+              ({userProfile.username})
+            </span>
+            <Settings className="w-3 h-3 text-slate-400 ml-0.5" />
+          </button>
         </div>
 
         <div className="flex items-center gap-4">
@@ -64,10 +77,6 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-1 text-rose-300 font-medium bg-rose-950/40 px-2 py-0.5 rounded border border-rose-500/30">
             <Shield className="w-3.5 h-3.5 text-rose-400" />
             <span>{medicPoints.toLocaleString()} MP</span>
-          </div>
-
-          <div className="flex items-center gap-1 text-purple-300 font-medium bg-purple-950/40 px-2 py-0.5 rounded border border-purple-500/30">
-            <span>Pity: {pityCount}/80</span>
           </div>
 
           <div className="flex items-center gap-1 text-orange-300 font-medium bg-orange-950/40 px-2 py-0.5 rounded border border-orange-500/30">
