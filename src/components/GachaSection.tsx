@@ -93,17 +93,24 @@ export const GachaSection: React.FC<GachaSectionProps> = ({
 
             <div className="grid grid-cols-3 gap-2 py-2 text-center text-xs">
               <div className="bg-slate-950 border border-slate-800 p-2 rounded-lg">
-                <span className="block font-bold text-amber-400">SSR (5%)</span>
-                <span className="text-[10px] text-slate-400">Pity Guaranteed</span>
+                <span className="block font-bold text-amber-400">SSR (8%)</span>
+                <span className="text-[10px] text-slate-400">Characters & Relics</span>
               </div>
               <div className="bg-slate-950 border border-slate-800 p-2 rounded-lg">
-                <span className="block font-bold text-purple-400">SR (25%)</span>
-                <span className="text-[10px] text-slate-400">Rare Apparel</span>
+                <span className="block font-bold text-purple-400">SR (27%)</span>
+                <span className="text-[10px] text-slate-400">Rare Accessories</span>
               </div>
               <div className="bg-slate-950 border border-slate-800 p-2 rounded-lg">
-                <span className="block font-bold text-slate-400">R (70%)</span>
+                <span className="block font-bold text-slate-400">R (65%)</span>
                 <span className="text-[10px] text-slate-400">Standard Gear</span>
               </div>
+            </div>
+
+            {/* API Sources Notice */}
+            <div className="text-[11px] text-slate-400 flex items-center gap-2 pt-1">
+              <span className="px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-rose-300 font-medium">
+                Live Multi-API: Waifu.im • Waifu.pics • Nekos.best • Jikan MAL • DiceBear
+              </span>
             </div>
 
             {/* Pity Progress Bar */}
@@ -189,19 +196,27 @@ export const GachaSection: React.FC<GachaSectionProps> = ({
                   <img src={item.image} alt={item.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                 </div>
 
-                <span
-                  className={`inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase ${
-                    item.rarity === 'SSR'
-                      ? 'bg-amber-500 text-slate-950'
-                      : item.rarity === 'SR'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-slate-700 text-slate-200'
-                  }`}
-                >
-                  {item.rarity}
-                </span>
+                <div className="flex items-center justify-center gap-1">
+                  <span
+                    className={`inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase ${
+                      item.rarity === 'SSR'
+                        ? 'bg-amber-500 text-slate-950'
+                        : item.rarity === 'SR'
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-slate-700 text-slate-200'
+                    }`}
+                  >
+                    {item.rarity}
+                  </span>
+                  <span className="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-800 text-slate-300 capitalize border border-slate-700">
+                    {item.type}
+                  </span>
+                </div>
 
                 <p className="text-[11px] font-bold text-white truncate">{item.name}</p>
+                {item.characterName && item.characterName !== 'Universal' && (
+                  <p className="text-[9px] text-amber-300 font-medium">Hero: {item.characterName}</p>
+                )}
               </div>
             ))}
           </div>

@@ -10,15 +10,23 @@ import { DreamAndScriptureSection } from './components/DreamAndScriptureSection'
 import { LeaderboardSection } from './components/LeaderboardSection';
 import { SeasonalCalendarSection } from './components/SeasonalCalendarSection';
 import { HolisticHealthSection } from './components/HolisticHealthSection';
+import { EmergencyCrisisSection } from './components/EmergencyCrisisSection';
+import { EmergencyAlertBanner } from './components/EmergencyAlertBanner';
+import { DonationModal } from './components/DonationModal';
 import { SettingsModal } from './components/SettingsModal';
 
 import { VitalsEntry, DreamEntry, GachaItem, PlayerInventoryItem, Banner, UserProfile } from './types';
 import { GACHA_CATALOG, INITIAL_LEADERBOARD } from './mockData';
+import { AnimeApiService } from './services/animeApi';
 import { getUserProfile, saveUserProfile, createNewAutoProfile } from './utils/storage';
 
 export default function App() {
   const [showTitleScreen, setShowTitleScreen] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>('vitals');
+
+  // Emergency & Donation state
+  const [isEmergencyActive, setIsEmergencyActive] = useState<boolean>(true);
+  const [isDonationOpen, setIsDonationOpen] = useState<boolean>(false);
 
   // User Profile & Settings
   const [userProfile, setUserProfile] = useState<UserProfile>(() => getUserProfile());
@@ -140,8 +148,8 @@ export default function App() {
     setDreams((prev) => [entry, ...prev]);
   };
 
-  // Gacha Summon Logic
-  const executePull = (banner: Banner, count: number) => {
+  // Gacha Summon Logic with Multi-API character & accessory support
+  const executePull = async (banner: Banner, count: number) => {
     const cost = count === 1 ? banner.costSingle : banner.costMulti;
     if (gems < cost) return;
 
@@ -152,33 +160,54 @@ export default function App() {
 
     for (let i = 0; i < count; i++) {
       currentPity += 1;
-      let pulledItem: GachaItem;
+      let targetRarity: 'SSR' | 'SR' | 'R' = 'R';
 
       if (currentPity >= 80) {
-        // Guaranteed SSR Pity Drop
-        pulledItem = GACHA_CATALOG.find((x) => x.rarity === 'SSR') || GACHA_CATALOG[0];
+        targetRarity = 'SSR';
         currentPity = 0;
       } else {
         const rand = Math.random();
-        if (rand < 0.05) {
-          pulledItem = GACHA_CATALOG.filter((x) => x.rarity === 'SSR')[
-            Math.floor(Math.random() * 2)
-          ];
+        if (rand < 0.08) {
+          targetRarity = 'SSR';
           currentPity = 0;
-        } else if (rand < 0.3) {
-          pulledItem = GACHA_CATALOG.filter((x) => x.rarity === 'SR')[
-            Math.floor(Math.random() * 2)
-          ];
+        } else if (rand < 0.35) {
+          targetRarity = 'SR';
         } else {
-          pulledItem = GACHA_CATALOG.filter((x) => x.rarity === 'R')[
-            Math.floor(Math.random() * 2)
-          ];
+          targetRarity = 'R';
+        }
+      }
+
+      let pulledItem: GachaItem;
+
+      // 40% chance to summon a live API item (Waifu.pics, Waifu.im, Nekos.best, Jikan, DiceBear)
+      if (Math.random() < 0.4) {
+        const isAccessory = Math.random() < 0.5;
+        const itemType = isAccessory ? 'accessory' : 'character';
+        const livePull = await AnimeApiService.generateLiveGachaPull(itemType, targetRarity);
+
+        pulledItem = {
+          id: `live-api-${itemType}-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+          name: livePull.name,
+          type: itemType,
+          rarity: targetRarity,
+          rarityScore: targetRarity === 'SSR' ? 1000 : targetRarity === 'SR' ? 350 : 100,
+          image: livePull.image,
+          description: livePull.description,
+          characterName: livePull.characterName,
+        };
+      } else {
+        // Pick randomly from the full catalog of matching rarity
+        const pool = GACHA_CATALOG.filter((x) => x.rarity === targetRarity);
+        if (pool.length > 0) {
+          pulledItem = pool[Math.floor(Math.random() * pool.length)];
+        } else {
+          pulledItem = GACHA_CATALOG[Math.floor(Math.random() * GACHA_CATALOG.length)];
         }
       }
 
       results.push(pulledItem);
 
-      // Add to inventory
+      // Add to player inventory
       setInventory((prev) => {
         const existingIndex = prev.findIndex((inv) => inv.item.id === pulledItem.id);
         if (existingIndex >= 0) {
@@ -230,6 +259,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased selection:bg-rose-500 selection:text-white">
+      {/* Top Urgent Emergency Crisis Banner */}
+      <EmergencyAlertBanner
+        isActive={isEmergencyActive}
+        onClose={() => setIsEmergencyActive(false)}
+        onOpenDonationModal={() => setIsDonationOpen(true)}
+      />
+
       <Header
         gems={gems}
         medicPoints={medicPoints}
@@ -244,6 +280,9 @@ export default function App() {
         userProfile={userProfile}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenTitleScreen={() => setShowTitleScreen(true)}
+        onOpenDonationModal={() => setIsDonationOpen(true)}
+        isEmergencyActive={isEmergencyActive}
+        onToggleEmergency={() => setIsEmergencyActive((prev) => !prev)}
       />
 
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
@@ -253,6 +292,14 @@ export default function App() {
 
         {activeTab === 'holisticHealth' && (
           <HolisticHealthSection onGainRewards={handleGainRewards} />
+        )}
+
+        {activeTab === 'emergency' && (
+          <EmergencyCrisisSection
+            isEmergencyActive={isEmergencyActive}
+            onToggleEmergency={() => setIsEmergencyActive((prev) => !prev)}
+            userLocation={userLocation}
+          />
         )}
 
         {activeTab === 'companion' && (
@@ -339,13 +386,35 @@ export default function App() {
         onUpdateProfile={(updated) => setUserProfile(updated)}
       />
 
+      {/* Creator Credits & Donation Modal */}
+      <DonationModal
+        isOpen={isDonationOpen}
+        onClose={() => setIsDonationOpen(false)}
+      />
+
       {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">
+      <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500 space-y-2">
         <p className="font-semibold text-slate-400">
-          Elfe Medical Health Companion • Personal Health, Gym & Faith Reflection Tracking
+          Elfe Medical Health Companion • Personal Health, Gym, Faith & 24/7 Crisis Support
         </p>
-        <p className="mt-1 text-[11px] text-slate-600">
-          In faith according to Yahusha, Jesus Christ, YHWH & Holy Spirit. Always consult a certified medical professional for official clinical advice.
+        <p className="text-[11px] text-amber-400 font-medium">
+          Created with love & faith by{' '}
+          <strong className="text-white">
+            Usagyuun VTuber / Eleventh Gyuuun / Junichi555 / Mark David V. Valmores
+          </strong>{' '}
+          • Support Creator:{' '}
+          <a
+            href="https://streamlabs.com/usagyuunvtuber/tip"
+            target="_blank"
+            rel="noreferrer"
+            className="text-emerald-400 underline hover:text-emerald-300 font-bold"
+          >
+            Streamlabs Tip
+          </a>{' '}
+          | GCash Mark David <span className="font-mono text-emerald-400">09763329358</span>
+        </p>
+        <p className="text-[11px] text-slate-600 max-w-3xl mx-auto px-4">
+          In faith according to Yahua, Yahusha Christ, YHWH & Holy Spirit. Always consult a certified medical professional for official clinical advice. If you are in crisis, call or text 988 or 911 immediately.
         </p>
       </footer>
     </div>

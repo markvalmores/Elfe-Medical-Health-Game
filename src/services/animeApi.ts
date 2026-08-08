@@ -105,6 +105,16 @@ export class AnimeApiService {
     return null;
   }
 
+  // Fetch accessory artwork from DiceBear/Icons API
+  public static fetchAccessoryApiImage(seedName: string, style: 'bottts' | 'shapes' | 'lorelei' | 'icons' = 'bottts'): AnimeApiItem {
+    const cleanSeed = encodeURIComponent(seedName);
+    return {
+      url: `https://api.dicebear.com/7.x/${style}/svg?seed=${cleanSeed}`,
+      source: `DiceBear ${style.toUpperCase()} Vector API`,
+      category: 'Accessory Relic',
+    };
+  }
+
   // Master method to get a new random anime avatar from available public/private APIs
   public static async getRandomAnimeAvatar(type: 'waifu' | 'neko' | 'random' = 'waifu'): Promise<AnimeApiItem> {
     // Try multiple APIs in order of preference
@@ -121,19 +131,103 @@ export class AnimeApiService {
 
     if (result) return result;
 
-    // Guaranteed high quality bundled anime artwork fallbacks
+    // Guaranteed high quality anime artwork fallbacks with diverse seeds
+    const randomSeed = Math.floor(Math.random() * 10000);
     const animeFallbacks = [
       nurseElfeAngelicImg,
       nurseElfeHeroicImg,
-      'https://api.dicebear.com/7.x/lorelei/svg?seed=NurseElfeAngelic',
-      'https://api.dicebear.com/7.x/adventurer/svg?seed=NurseElfeWaifu',
-      'https://api.dicebear.com/7.x/bottts/svg?seed=NurseElfeAnime',
+      `https://api.dicebear.com/7.x/lorelei/svg?seed=AnimeHeroine_${randomSeed}`,
+      `https://api.dicebear.com/7.x/adventurer/svg?seed=AnimePaladin_${randomSeed}`,
+      `https://api.dicebear.com/7.x/bottts/svg?seed=AnimeMedic_${randomSeed}`,
     ];
 
     return {
       url: animeFallbacks[Math.floor(Math.random() * animeFallbacks.length)],
-      source: 'Anime Vector Engine',
-      category: 'Nurse Elfe Special',
+      source: 'Anime API Engine',
+      category: 'Special Hero',
     };
+  }
+
+  // Live API Gacha Generator that creates unique Characters or Accessories on the fly
+  public static async generateLiveGachaPull(itemType: 'character' | 'accessory' | 'outfit', rarity: 'SSR' | 'SR' | 'R'): Promise<{
+    name: string;
+    description: string;
+    image: string;
+    characterName: string;
+    sourceApi: string;
+  }> {
+    if (itemType === 'accessory') {
+      const accessoryNames = {
+        SSR: [
+          'Anointed Crown of Yahusha',
+          'Aegis Shield of Faith',
+          'Celestial Stethoscope of Divine Grace',
+          'Holy Grail of Living Waters',
+          'Seraphic Feathered Halo',
+          'Diamond Pulse Pendant',
+        ],
+        SR: [
+          'Emerald Herb Satchel',
+          'Holographic Vital Scanner',
+          'Silver Blessing Chime',
+          'Sanctified Olive Pouch',
+          'Crystal Water Flask',
+        ],
+        R: [
+          'Digital Pulse Sensor',
+          'Compact Medical Chart',
+          'Purity Wrist Strap',
+          'Therapeutic Oil Vial',
+        ],
+      };
+
+      const nameList = accessoryNames[rarity];
+      const selectedName = nameList[Math.floor(Math.random() * nameList.length)];
+      const seed = selectedName.replace(/\s+/g, '') + '_' + Math.floor(Math.random() * 9999);
+      const style = rarity === 'SSR' ? 'lorelei' : rarity === 'SR' ? 'shapes' : 'bottts';
+      const item = this.fetchAccessoryApiImage(seed, style);
+
+      return {
+        name: selectedName,
+        description: `Rare divine gear fetched live from ${item.source}. Boosts health tracking efficacy.`,
+        image: item.url,
+        characterName: 'Universal',
+        sourceApi: item.source,
+      };
+    } else {
+      // Character or Outfit pull
+      const apiItem = await this.getRandomAnimeAvatar('random');
+      const characterTitles = {
+        SSR: [
+          'Celestia (Seraph Medic)',
+          'Titus (Holy Paladin Doctor)',
+          'Rei (Solitary Sun Priestess)',
+          'Daisuke (Divine Shield Medic)',
+          'Hanabi (Cherry Blossom Restorer)',
+        ],
+        SR: [
+          'Natsuki (Wellness Student)',
+          'Eren (Faith Monk)',
+          'Sora (Breeze Nurse)',
+          'Mio (Hydration Maid)',
+        ],
+        R: [
+          'Rookie Trainee Nurse',
+          'Assistant Clinic Medic',
+          'Health Record Keeper',
+        ],
+      };
+
+      const titleList = characterTitles[rarity];
+      const selectedTitle = titleList[Math.floor(Math.random() * titleList.length)];
+
+      return {
+        name: selectedTitle,
+        description: `Character summoned via ${apiItem.source} (${apiItem.category}). Ready for health companion duties.`,
+        image: apiItem.url,
+        characterName: apiItem.category || selectedTitle.split(' ')[0],
+        sourceApi: apiItem.source,
+      };
+    }
   }
 }

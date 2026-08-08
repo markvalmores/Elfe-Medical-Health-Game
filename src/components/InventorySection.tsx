@@ -22,13 +22,19 @@ export const InventorySection: React.FC<InventoryProps> = ({
   onSellDuplicate,
 }) => {
   const [sortBy, setSortBy] = useState<'rarity' | 'date' | 'name'>('rarity');
+  const [filterType, setFilterType] = useState<'all' | 'character' | 'accessory' | 'outfit'>('all');
   const [selectedItem, setSelectedItem] = useState<PlayerInventoryItem | null>(
     inventory.length > 0 ? inventory[0] : null
   );
 
   const rarityRank = { SSR: 3, SR: 2, R: 1 };
 
-  const sortedInventory = [...inventory].sort((a, b) => {
+  const filteredInventory = inventory.filter((inv) => {
+    if (filterType === 'all') return true;
+    return inv.item.type === filterType;
+  });
+
+  const sortedInventory = [...filteredInventory].sort((a, b) => {
     if (sortBy === 'rarity') {
       return rarityRank[b.item.rarity] - rarityRank[a.item.rarity];
     } else if (sortBy === 'date') {
@@ -48,42 +54,87 @@ export const InventorySection: React.FC<InventoryProps> = ({
           <span className="text-xs text-slate-400 font-medium">({inventory.length} items)</span>
         </div>
 
-        {/* Auto-Sort Buttons */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-400 flex items-center gap-1">
-            <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
-            Sort By:
-          </span>
-          <button
-            onClick={() => setSortBy('rarity')}
-            className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
-              sortBy === 'rarity'
-                ? 'bg-rose-600 text-white shadow-md'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            Rarity Rank
-          </button>
-          <button
-            onClick={() => setSortBy('date')}
-            className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
-              sortBy === 'date'
-                ? 'bg-rose-600 text-white shadow-md'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            Acquired Date
-          </button>
-          <button
-            onClick={() => setSortBy('name')}
-            className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
-              sortBy === 'name'
-                ? 'bg-rose-600 text-white shadow-md'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            Name
-          </button>
+        {/* Type Filter & Auto-Sort Buttons */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+            <button
+              onClick={() => setFilterType('all')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                filterType === 'all'
+                  ? 'bg-amber-500 text-slate-950'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              All Items ({inventory.length})
+            </button>
+            <button
+              onClick={() => setFilterType('character')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                filterType === 'character'
+                  ? 'bg-amber-500 text-slate-950'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Characters
+            </button>
+            <button
+              onClick={() => setFilterType('accessory')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                filterType === 'accessory'
+                  ? 'bg-amber-500 text-slate-950'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Accessories
+            </button>
+            <button
+              onClick={() => setFilterType('outfit')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                filterType === 'outfit'
+                  ? 'bg-amber-500 text-slate-950'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Outfits
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-slate-400 flex items-center gap-1">
+              <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
+              Sort:
+            </span>
+            <button
+              onClick={() => setSortBy('rarity')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                sortBy === 'rarity'
+                  ? 'bg-rose-600 text-white shadow-md'
+                  : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
+            >
+              Rarity
+            </button>
+            <button
+              onClick={() => setSortBy('date')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                sortBy === 'date'
+                  ? 'bg-rose-600 text-white shadow-md'
+                  : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
+            >
+              Date
+            </button>
+            <button
+              onClick={() => setSortBy('name')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                sortBy === 'name'
+                  ? 'bg-rose-600 text-white shadow-md'
+                  : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
+            >
+              Name
+            </button>
+          </div>
         </div>
       </div>
 

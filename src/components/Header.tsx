@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Sparkles, Shield, Gift, Calendar, Award, User, Flame, Globe, Settings, Dumbbell, Hash } from 'lucide-react';
+import { Heart, Sparkles, Shield, Gift, Calendar, Award, User, Flame, Globe, Settings, Dumbbell, Hash, ShieldAlert, PhoneCall } from 'lucide-react';
 import { UserProfile } from '../types';
 
 interface HeaderProps {
@@ -16,6 +16,9 @@ interface HeaderProps {
   userProfile: UserProfile;
   onOpenSettings: () => void;
   onOpenTitleScreen?: () => void;
+  onOpenDonationModal: () => void;
+  isEmergencyActive: boolean;
+  onToggleEmergency: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -32,10 +35,14 @@ export const Header: React.FC<HeaderProps> = ({
   userProfile,
   onOpenSettings,
   onOpenTitleScreen,
+  onOpenDonationModal,
+  isEmergencyActive,
+  onToggleEmergency,
 }) => {
   const tabs = [
     { id: 'vitals', label: 'Vitals & Diagnostics', icon: Heart },
     { id: 'holisticHealth', label: 'Gym, Diet & Cleansing', icon: Dumbbell },
+    { id: 'emergency', label: 'Crisis & Safety 988', icon: ShieldAlert },
     { id: 'companion', label: 'Nurse Elfe', icon: User },
     { id: 'gacha', label: 'Gacha Banners', icon: Sparkles },
     { id: 'inventory', label: 'Inventory & Crafting', icon: Shield },
@@ -66,9 +73,29 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
             <Settings className="w-3 h-3 text-slate-400 ml-0.5" />
           </button>
+
+          <button
+            onClick={onOpenDonationModal}
+            className="flex items-center gap-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-2.5 py-0.5 rounded-full border border-emerald-400/40 transition shadow"
+          >
+            <Heart className="w-3 h-3 text-rose-300 fill-rose-300" />
+            <span>Donate / Creator</span>
+          </button>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onToggleEmergency}
+            className={`px-2.5 py-0.5 rounded-full font-bold text-[11px] flex items-center gap-1 transition ${
+              isEmergencyActive
+                ? 'bg-rose-600 text-white animate-pulse shadow-md shadow-rose-600/50'
+                : 'bg-slate-800 hover:bg-slate-700 text-rose-300 border border-rose-500/30'
+            }`}
+          >
+            <PhoneCall className="w-3 h-3" />
+            {isEmergencyActive ? 'SOS Lifeline ACTIVE' : '988 SOS Mode'}
+          </button>
+
           <div className="flex items-center gap-1 text-amber-300 font-medium bg-amber-950/40 px-2 py-0.5 rounded border border-amber-500/30">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span>{gems.toLocaleString()} Gems</span>

@@ -24,11 +24,14 @@ export const AnimeApiManager: React.FC<AnimeApiManagerProps> = ({
     setTimeout(() => setIsSaved(false), 2500);
   };
 
-  const handleFetchFromApi = async (category: 'waifu' | 'neko' | 'random') => {
+  const handleFetchFromApi = async (category: 'waifu' | 'neko' | 'random' | 'accessory') => {
     setIsLoading(true);
     let item: AnimeApiItem | null = null;
 
-    if (activeApiSource === 'Waifu.pics Public API') {
+    if (category === 'accessory') {
+      const seed = 'Accessory_' + Math.floor(Math.random() * 10000);
+      item = AnimeApiService.fetchAccessoryApiImage(seed, 'bottts');
+    } else if (activeApiSource === 'Waifu.pics Public API') {
       item = await AnimeApiService.fetchWaifuPics(category === 'random' ? 'waifu' : category);
     } else if (activeApiSource === 'Nekos.best API') {
       item = await AnimeApiService.fetchNekosBest(category === 'random' ? 'waifu' : category);
@@ -145,7 +148,7 @@ export const AnimeApiManager: React.FC<AnimeApiManagerProps> = ({
             Generate Live Character Art from API
           </span>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => handleFetchFromApi('waifu')}
               disabled={isLoading}
@@ -170,7 +173,16 @@ export const AnimeApiManager: React.FC<AnimeApiManagerProps> = ({
               className="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition"
             >
               <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-              Fetch Anime
+              Fetch Character
+            </button>
+
+            <button
+              onClick={() => handleFetchFromApi('accessory')}
+              disabled={isLoading}
+              className="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              Fetch Accessory
             </button>
           </div>
 
