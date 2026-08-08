@@ -1,4 +1,6 @@
 import { GachaItem, ScriptureQuote, Banner, LeaderboardPlayer } from './types';
+import nurseElfeAngelicImg from './assets/images/nurse_elfe_angelic_1786227050228.jpg';
+import nurseElfeHeroicImg from './assets/images/nurse_elfe_heroic_1786227064218.jpg';
 
 export const DAILY_SCRIPTURES: ScriptureQuote[] = [
   {
@@ -47,7 +49,7 @@ export const GACHA_CATALOG: GachaItem[] = [
     rarityScore: 1000,
     characterName: 'Elfe',
     description: 'Exclusive angelic nurse outfit featuring glowing radiant wings and medical staff.',
-    image: '/src/assets/images/nurse_elfe_angelic_1786227050228.jpg',
+    image: nurseElfeAngelicImg,
   },
   {
     id: 'elfe-heroic',
@@ -57,7 +59,7 @@ export const GACHA_CATALOG: GachaItem[] = [
     rarityScore: 900,
     characterName: 'Elfe',
     description: 'The iconic emergency response suit designed for heroic high-precision care.',
-    image: '/src/assets/images/nurse_elfe_heroic_1786227064218.jpg',
+    image: nurseElfeHeroicImg,
   },
   {
     id: 'elfe-casual',
@@ -128,7 +130,7 @@ export const BANNERS: Banner[] = [
     subtitle: 'Limited Event Banner featuring Nurse Elfe Angelic Form',
     featuredName: 'Nurse Elfe (Angelic Medic)',
     featuredRarity: 'SSR',
-    image: '/src/assets/images/nurse_elfe_angelic_1786227050228.jpg',
+    image: nurseElfeAngelicImg,
     costSingle: 160,
     costMulti: 1500,
     isLimited: true,
@@ -139,7 +141,7 @@ export const BANNERS: Banner[] = [
     subtitle: 'Welcome Starter Banner with boosted drop rates for starter gear',
     featuredName: 'Nurse Elfe (Heroic Arrival)',
     featuredRarity: 'SSR',
-    image: '/src/assets/images/nurse_elfe_heroic_1786227064218.jpg',
+    image: nurseElfeHeroicImg,
     costSingle: 160,
     costMulti: 1500,
     isLimited: false,
@@ -153,7 +155,7 @@ export const INITIAL_LEADERBOARD: LeaderboardPlayer[] = [
     rank: 1,
     powerScore: 14800,
     unlockedCount: 24,
-    avatar: '/src/assets/images/nurse_elfe_angelic_1786227050228.jpg',
+    avatar: nurseElfeAngelicImg,
     badge: 'Angel Rank I',
   },
   {
@@ -162,7 +164,7 @@ export const INITIAL_LEADERBOARD: LeaderboardPlayer[] = [
     rank: 2,
     powerScore: 12350,
     unlockedCount: 19,
-    avatar: '/src/assets/images/nurse_elfe_heroic_1786227064218.jpg',
+    avatar: nurseElfeHeroicImg,
     badge: 'Angel Rank II',
   },
   {

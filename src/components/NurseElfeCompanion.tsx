@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, Sparkles, MessageSquare, Heart, Shield, RefreshCw } from 'lucide-react';
 import { GachaItem } from '../types';
+import nurseElfeAngelicImg from '../assets/images/nurse_elfe_angelic_1786227050228.jpg';
 
 interface NurseElfeProps {
   equippedOutfit: GachaItem | null;
@@ -35,7 +36,7 @@ export const NurseElfeCompanion: React.FC<NurseElfeProps> = ({
 
   const activeImage = equippedOutfit
     ? equippedOutfit.image
-    : '/src/assets/images/nurse_elfe_angelic_1786227050228.jpg';
+    : nurseElfeAngelicImg;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

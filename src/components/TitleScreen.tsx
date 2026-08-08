@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Plus, Heart, Sparkles, Shield, Stethoscope, Calendar } from 'lucide-react';
+import nurseElfeAngelicImg from '../assets/images/nurse_elfe_angelic_1786227050228.jpg';
 
 interface TitleScreenProps {
   onStartGame: () => void;
@@ -53,7 +54,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({ onStartGame }) => {
         <div className="relative inline-block my-4">
           <div className="w-48 h-64 sm:w-56 sm:h-72 rounded-3xl overflow-hidden border-4 border-rose-500/50 shadow-2xl shadow-rose-950/80 mx-auto relative group transition-transform duration-500 hover:scale-105">
             <img
-              src="/src/assets/images/nurse_elfe_angelic_1786227050228.jpg"
+              src={nurseElfeAngelicImg}
               alt="Nurse Elfe Anime"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover"

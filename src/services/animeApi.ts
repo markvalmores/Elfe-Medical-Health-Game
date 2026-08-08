@@ -1,6 +1,9 @@
 // Anime API integration service supporting public endpoints (Waifu.pics, Waifu.im, Nekos.best, Jikan) 
 // and private authorized key modes for AI-generated anime avatars and outfit cards.
 
+import nurseElfeAngelicImg from '../assets/images/nurse_elfe_angelic_1786227050228.jpg';
+import nurseElfeHeroicImg from '../assets/images/nurse_elfe_heroic_1786227064218.jpg';
+
 export interface AnimeApiItem {
   url: string;
   source: string;
@@ -118,13 +121,13 @@ export class AnimeApiService {
 
     if (result) return result;
 
-    // Guaranteed high quality anime artwork fallbacks
+    // Guaranteed high quality bundled anime artwork fallbacks
     const animeFallbacks = [
-      'https://raw.githubusercontent.com/CatMeow/Anime-Avatars/main/avatars/anime_nurse_1.jpg',
-      'https://raw.githubusercontent.com/CatMeow/Anime-Avatars/main/avatars/anime_waifu_2.jpg',
-      'https://api.dicebear.com/7.x/bottts/svg?seed=NurseElfeAnime',
-      'https://api.dicebear.com/7.x/adventurer/svg?seed=NurseElfeWaifu',
+      nurseElfeAngelicImg,
+      nurseElfeHeroicImg,
       'https://api.dicebear.com/7.x/lorelei/svg?seed=NurseElfeAngelic',
+      'https://api.dicebear.com/7.x/adventurer/svg?seed=NurseElfeWaifu',
+      'https://api.dicebear.com/7.x/bottts/svg?seed=NurseElfeAnime',
     ];
 
     return {
