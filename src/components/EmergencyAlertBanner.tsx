@@ -15,11 +15,11 @@ export const EmergencyAlertBanner: React.FC<EmergencyAlertBannerProps> = ({
   if (!isActive) return null;
 
   return (
-    <div className="bg-gradient-to-r from-red-950 via-rose-900 to-slate-950 border-b-2 border-rose-500 text-white py-2.5 px-4 sticky top-0 z-50 shadow-2xl animate-fade-in">
+    <div className="medical-glass-danger scanline-overlay scanline-beam sticky top-0 z-50 text-white py-2.5 px-4 shadow-2xl backdrop-blur-xl border-b border-rose-500/50">
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
         {/* Left SOS Label */}
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-600 text-white font-black text-[11px] uppercase tracking-wider animate-pulse shadow-md shadow-rose-600/50">
+          <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-600/90 text-white font-black text-[11px] uppercase tracking-wider animate-pulse shadow-md shadow-rose-600/50 border border-rose-400">
             <Radio className="w-3.5 h-3.5 animate-ping" />
             24/7 CRISIS & SAFETY LIFELINE ACTIVE
           </span>
