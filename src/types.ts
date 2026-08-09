@@ -8,6 +8,8 @@ export interface VitalsEntry {
   temp: number; // in °C or °F
   weight: number; // in kg
   height: number; // in cm
+  personName?: string;
+  fingerprintId?: string;
   notes?: string;
 }
 

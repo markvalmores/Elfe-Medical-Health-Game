@@ -134,8 +134,8 @@ export class AnimeApiService {
     // Guaranteed high quality anime artwork fallbacks with diverse seeds
     const randomSeed = Math.floor(Math.random() * 10000);
     const animeFallbacks = [
-      nurseElfeAngelicImg,
-      nurseElfeHeroicImg,
+      'https://api.dicebear.com/7.x/lorelei/svg?seed=NurseElfeAngelicMedic',
+      'https://api.dicebear.com/7.x/adventurer/svg?seed=NurseElfeHeroicArrival',
       `https://api.dicebear.com/7.x/lorelei/svg?seed=AnimeHeroine_${randomSeed}`,
       `https://api.dicebear.com/7.x/adventurer/svg?seed=AnimePaladin_${randomSeed}`,
       `https://api.dicebear.com/7.x/bottts/svg?seed=AnimeMedic_${randomSeed}`,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Package, Recycle, ArrowUpDown, DollarSign, Sparkles, Check, RefreshCw } from 'lucide-react';
 import { PlayerInventoryItem, GachaItem } from '../types';
+import { handleImageError } from '../utils/imageFallback';
 
 interface InventoryProps {
   inventory: PlayerInventoryItem[];
@@ -168,6 +169,7 @@ export const InventorySection: React.FC<InventoryProps> = ({
                         src={invItem.item.image}
                         alt={invItem.item.name}
                         referrerPolicy="no-referrer"
+                        onError={(e) => handleImageError(e)}
                         className="w-full h-full object-cover"
                       />
                       <span
@@ -220,6 +222,7 @@ export const InventorySection: React.FC<InventoryProps> = ({
                   src={selectedItem.item.image}
                   alt={selectedItem.item.name}
                   referrerPolicy="no-referrer"
+                  onError={(e) => handleImageError(e)}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>

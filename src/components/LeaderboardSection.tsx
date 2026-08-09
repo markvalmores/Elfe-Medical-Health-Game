@@ -1,6 +1,7 @@
 import React from 'react';
 import { Award, Shield, Trophy, Users, Zap, Crown } from 'lucide-react';
 import { LeaderboardPlayer } from '../types';
+import { handleImageError } from '../utils/imageFallback';
 
 interface LeaderboardProps {
   leaderboard: LeaderboardPlayer[];
@@ -47,7 +48,7 @@ export const LeaderboardSection: React.FC<LeaderboardProps> = ({ leaderboard, us
               </div>
 
               <div className="w-20 h-20 rounded-full border-2 border-rose-500 overflow-hidden mb-2 shadow-lg">
-                <img src={player.avatar} alt={player.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                <img src={player.avatar} alt={player.name} referrerPolicy="no-referrer" onError={(e) => handleImageError(e)} className="w-full h-full object-cover" />
               </div>
 
               <h4 className="text-sm font-bold text-white">{player.name}</h4>
@@ -80,7 +81,7 @@ export const LeaderboardSection: React.FC<LeaderboardProps> = ({ leaderboard, us
               <div className="flex items-center gap-3">
                 <span className="font-bold text-slate-400 w-6 text-center">#{player.rank}</span>
                 <div className="w-8 h-8 rounded-full overflow-hidden border border-slate-700">
-                  <img src={player.avatar} alt={player.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                  <img src={player.avatar} alt={player.name} referrerPolicy="no-referrer" onError={(e) => handleImageError(e)} className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <p className="font-bold text-white">{player.name}</p>

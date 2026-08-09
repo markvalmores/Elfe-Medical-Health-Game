@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, Key, RefreshCw, Check, Globe, Shield, Download, Image as ImageIcon } from 'lucide-react';
 import { AnimeApiService, AnimeApiItem } from '../services/animeApi';
 import { GachaItem } from '../types';
+import { handleImageError } from '../utils/imageFallback';
 
 interface AnimeApiManagerProps {
   onAddGachaItemToInventory: (item: GachaItem) => void;
@@ -201,6 +202,7 @@ export const AnimeApiManager: React.FC<AnimeApiManagerProps> = ({
                   src={previewImage.url}
                   alt="API Artwork"
                   referrerPolicy="no-referrer"
+                  onError={(e) => handleImageError(e)}
                   className="w-full h-full object-cover"
                 />
                 <span className="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-950/80 text-[10px] font-bold text-amber-300 border border-amber-500/30">

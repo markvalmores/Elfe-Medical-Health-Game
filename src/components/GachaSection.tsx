@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, Gift, AlertCircle, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { Banner, GachaItem } from '../types';
 import { BANNERS, GACHA_CATALOG } from '../mockData';
+import { handleImageError } from '../utils/imageFallback';
 
 interface GachaSectionProps {
   gems: number;
@@ -48,6 +49,7 @@ export const GachaSection: React.FC<GachaSectionProps> = ({
                   src={banner.image}
                   alt={banner.title}
                   referrerPolicy="no-referrer"
+                  onError={(e) => handleImageError(e)}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
@@ -193,7 +195,7 @@ export const GachaSection: React.FC<GachaSectionProps> = ({
                 }`}
               >
                 <div className="h-20 rounded-lg overflow-hidden border border-slate-800">
-                  <img src={item.image} alt={item.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                  <img src={item.image} alt={item.name} referrerPolicy="no-referrer" onError={(e) => handleImageError(e)} className="w-full h-full object-cover" />
                 </div>
 
                 <div className="flex items-center justify-center gap-1">

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { User, Sparkles, MessageSquare, Heart, Shield, RefreshCw } from 'lucide-react';
 import { GachaItem } from '../types';
 import nurseElfeAngelicImg from '../assets/images/nurse_elfe_angelic_1786227050228.jpg';
+import { handleImageError } from '../utils/imageFallback';
 
 interface NurseElfeProps {
   equippedOutfit: GachaItem | null;
@@ -74,6 +75,7 @@ export const NurseElfeCompanion: React.FC<NurseElfeProps> = ({
               src={activeImage}
               alt="Nurse Elfe"
               referrerPolicy="no-referrer"
+              onError={(e) => handleImageError(e)}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
@@ -120,6 +122,7 @@ export const NurseElfeCompanion: React.FC<NurseElfeProps> = ({
               <img
                 src={activeImage}
                 alt="Outfit"
+                onError={(e) => handleImageError(e)}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -148,6 +151,7 @@ export const NurseElfeCompanion: React.FC<NurseElfeProps> = ({
                 <img
                   src={equippedAccessory.image}
                   alt="Accessory"
+                  onError={(e) => handleImageError(e)}
                   className="w-full h-full object-cover"
                 />
               ) : (

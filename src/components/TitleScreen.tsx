@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Plus, Heart, Sparkles, Shield, Stethoscope, Calendar } from 'lucide-react';
 import nurseElfeAngelicImg from '../assets/images/nurse_elfe_angelic_1786227050228.jpg';
+import { handleImageError } from '../utils/imageFallback';
 
 interface TitleScreenProps {
   onStartGame: () => void;
@@ -57,6 +58,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({ onStartGame }) => {
               src={nurseElfeAngelicImg}
               alt="Nurse Elfe Anime"
               referrerPolicy="no-referrer"
+              onError={(e) => handleImageError(e)}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
